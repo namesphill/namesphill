@@ -1,8 +1,9 @@
 {
-  "name": "notion-blog",
+  "name": "namesphill",
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
+    "devv": "now dev",
     "start": "next start",
     "build": "next build && node .next/serverless/scripts/build-rss.js",
     "format": "prettier --write \"**/*.{js,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,sass}\" --ignore-path .gitignore"
