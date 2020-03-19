@@ -11,11 +11,11 @@ import {
 } from "../../lib/blog-helpers";
 import { textBlock } from "../../lib/notion/renderers";
 import getNotionUsers from "../../lib/notion/getNotionUsers";
-import getBlogIndex from "../../lib/notion/getBlogIndex";
+import getBlogIndex from "../../lib/blog/getBlogIndex";
 
 export async function getStaticProps({ preview }) {
   const postsTable = await getBlogIndex();
-  console.log({ postsTable });
+  // console.log({ postsTable });
   const authorsToGet: Set<string> = new Set();
   const posts: any[] = Object.keys(postsTable)
     .map(slug => {

@@ -1,5 +1,5 @@
-import '../styles/global.css'
-import ExtLink from '../components/ext-link'
+import "./global.css";
+import ExtLink from "../components/ext-link";
 
 export default ({ Component, pageProps }) => (
   <>
@@ -16,11 +16,11 @@ export default ({ Component, pageProps }) => (
         />
       </ExtLink>
       <span>
-        or{' '}
+        or{" "}
         <ExtLink href="https://github.com/ijjk/notion-blog">
           view source
         </ExtLink>
       </span>
     </footer>
   </>
-)
+);

@@ -1,25 +1,32 @@
-import rpc from './rpc'
+import rpc from "./rpc";
+
+export type NotionUser = {
+  full_name: string;
+};
 
 export default async function getNotionUsers(ids: string[]) {
-  const { results = [] } = await rpc('getRecordValues', {
+  const { results = [] } = await rpc("getRecordValues", {
     requests: ids.map((id: string) => ({
       id,
-      table: 'notion_user',
-    })),
-  })
+      table: "notion_user"
+    }))
+  });
 
-  const users: any = {}
+  const users: { [key: string]: NotionUser } = {};
 
   for (const result of results) {
-    const { value } = result || { value: {} }
-    const { given_name, family_name } = value
-    let full_name = given_name || ''
+    const { value } = result || {
+      value: { given_name: "", family_name: "", id: "" }
+    };
+    const { given_name, family_name } = value;
+    let full_name = given_name || "";
 
     if (family_name) {
-      full_name = `${full_name} ${family_name}`
+      full_name = `${full_name} ${family_name}`;
     }
-    users[value.id] = { full_name }
+    const userId = value.id;
+    users[userId] = { full_name };
   }
 
-  return { users }
+  return { users };
 }

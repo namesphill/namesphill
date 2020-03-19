@@ -3,6 +3,9 @@
 # environmental variables
 .env
 
+# private variables
+private.ts
+
 # dependencies
 /node_modules
 /.pnp
