@@ -1,4 +1,3 @@
-import { values } from "./rpc";
 import { loadPageChunk } from "./loadPageChunk";
 
 const nonPreviewTypes = new Set(["editor", "page", "collection_view"]);
@@ -8,7 +7,7 @@ export async function getPostPreview(pageId: string) {
   let dividerIndex = 0;
 
   const data = await loadPageChunk({ pageId, limit: 10 });
-  blocks = values(data.recordMap.block);
+  blocks = Object.values(data.recordMap.block);
   // console.log({ blocks });
 
   for (let i = 0; i < blocks.length; i++) {

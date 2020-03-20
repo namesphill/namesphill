@@ -76,7 +76,7 @@ export default ({ posts = [], preview }) => {
                     {!post.Published && (
                       <span className={blogStyles.draftBadge}>Draft</span>
                     )}
-                    <a>{post.Page}</a>
+                    <a>{post.Name}</a>
                   </div>
                 </Link>
               </h3>

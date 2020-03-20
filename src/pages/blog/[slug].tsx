@@ -138,7 +138,7 @@ const RenderPost = ({ post, redirect, preview }) => {
 
   return (
     <>
-      <Header titlePre={post.Page} />
+      <Header titlePre={post.Name} />
       {preview && (
         <div className={blogStyles.previewAlertContainer}>
           <div className={blogStyles.previewAlert}>
@@ -151,7 +151,7 @@ const RenderPost = ({ post, redirect, preview }) => {
         </div>
       )}
       <div className={blogStyles.post}>
-        <h1>{post.Page || ""}</h1>
+        <h1>{post.Name || ""}</h1>
         {post.Authors.length > 0 && (
           <div className="authors">By: {post.Authors.join(" ")}</div>
         )}

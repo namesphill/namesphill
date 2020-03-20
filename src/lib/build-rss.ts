@@ -71,7 +71,7 @@ function createRSS(blogPosts = []) {
 }
 
 async function main() {
-  const postsTable = await getBlogIndex(true);
+  const postsTable = await getBlogIndex();
   const neededAuthors = new Set<string>();
 
   const blogPosts = Object.keys(postsTable)
@@ -93,7 +93,7 @@ async function main() {
   blogPosts.forEach(post => {
     post.authors = post.authors.map(id => users[id]);
     post.link = getBlogLink(post.Slug);
-    post.title = post.Page;
+    post.title = post.Name;
     post.date = post.Date;
   });
 

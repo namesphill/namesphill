@@ -1,13 +1,84 @@
 import fetch, { Response } from "node-fetch";
 import { API_ENDPOINT, NOTION_TOKEN } from "../server/server-constants";
 
+export type NotionSchemaTypes =
+  | "checkbox"
+  | "person"
+  | "created_time"
+  | "select"
+  | "date"
+  | "'multi_select'"
+  | "title";
+
+export type UserPropertyValue = ["‣", [["u", string]]];
+export type UserPropertyDivider = [","];
+export type UserProp = [
+  UserPropertyValue,
+  UserPropertyDivider?,
+  UserPropertyValue?,
+  UserPropertyDivider?,
+  UserPropertyValue?,
+  UserPropertyDivider?,
+  UserPropertyValue?,
+  UserPropertyDivider?,
+  UserPropertyValue?,
+  UserPropertyDivider?,
+  UserPropertyValue?
+];
+
+export type PagePropertyValue = ["‣", [["p", string]]];
+export type PagePropertyDivider = [string];
+export type PageProp = [
+  PagePropertyValue,
+  PagePropertyDivider?,
+  PagePropertyValue?,
+  PagePropertyDivider?,
+  PagePropertyValue?,
+  PagePropertyDivider?,
+  PagePropertyValue?,
+  PagePropertyDivider?,
+  PagePropertyValue?,
+  PagePropertyDivider?,
+  PagePropertyValue?
+];
+
+export type DatePropertyValue = [
+  "‣",
+  [
+    [
+      "d",
+      {
+        type: "datetimerange" | "date";
+        time_zone: string;
+        start_date: string;
+        start_time?: string;
+        end_date?: string;
+        end_time?: string;
+        reminder?: {
+          unit: "minute" | "hour" | "day";
+          value: number;
+        };
+      }
+    ]
+  ]
+];
+export type DateProp = [DatePropertyValue];
+
+export type LinkPropertyValue = [string, [["a", string]]];
+export type LinkProp = [LinkPropertyValue];
+
+export type TextProp = [[string]];
+
 export type NotionBlock = {
   role: string;
   value: {
     id: string;
     version: number;
     type: string;
-    properties: { title: [string[]] };
+    properties?: {
+      title: TextProp;
+      [key: string]: TextProp | UserProp | DateProp | LinkProp | PageProp;
+    };
     content: string[];
     format: {
       page_icon: string;
@@ -21,7 +92,18 @@ export type NotionBlock = {
     }[];
     collection_id: string;
     view_ids: string[];
-    schema: { [key: string]: any };
+    schema: {
+      [key: string]: {
+        name: string;
+        type: NotionSchemaTypes;
+        options?: {
+          id: string;
+          color: string;
+          value: string;
+          [key: string]: string;
+        };
+      };
+    };
     created_time: number;
     last_edited_time: number;
     parent_id: string;
@@ -128,15 +210,8 @@ export default async function rpc<T extends NotionFunctionName>(
     body: JSON.stringify(body)
   });
 
-  if (res.ok) {
-    console.log("_____" + fnName + "_____");
-    const obo = await res.json();
-    console.log(Object.keys(obo).sort());
-    console.log("__________________________________");
-    return obo;
-  } else {
-    throw new Error(await getError(res));
-  }
+  if (res.ok) return res.json();
+  throw new Error(await getError(res));
 }
 
 export async function getError(res: Response) {
@@ -156,13 +231,4 @@ export function getBodyOrNull(res: Response) {
   } catch (err) {
     return null;
   }
-}
-
-export function values(obj: any) {
-  const vals: any = [];
-
-  Object.keys(obj).forEach(key => {
-    vals.push(obj[key]);
-  });
-  return vals;
 }
