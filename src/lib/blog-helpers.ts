@@ -14,6 +14,10 @@ export const postIsPublished = (post: any) => {
   return post.Published === "Yes";
 };
 
+/**
+ * Creates default slug or normalizes one
+ * @param slug Base slug
+ */
 export const normalizeSlug = (slug: string): string => {
   let startingSlash = slug.startsWith("/");
   let endingSlash = slug.endsWith("/");

@@ -1,5 +1,5 @@
 import { Sema } from "async-sema";
-import getTableData from "../notion/getTableData";
+import getCollectionData from "../notion/getCollectionData";
 import { getPostPreview } from "../notion/getPostPreview";
 import { readFile, writeFile } from "../fs-helpers";
 import { BLOG_INDEX_ID, BLOG_INDEX_CACHE } from "../server/server-constants";
@@ -25,7 +25,7 @@ export default async function getBlogIndex({ includePreviews = true } = {}) {
         block => block.value.type === "collection_view"
       );
 
-      postsTable = await getTableData(tableBlock, true);
+      postsTable = await getCollectionData(tableBlock, true);
     } catch (err) {
       console.warn(`Failed to load Notion posts: ${err}`);
       return {};
