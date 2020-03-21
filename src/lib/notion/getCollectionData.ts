@@ -1,6 +1,12 @@
 import Slugger from "github-slugger";
 import queryCollection from "./queryCollection";
-import getNotionUsers, { NotionUser } from "./getNotionUsers";
+import getUsers, { NotionUser } from "./getUsers";
+import getPageData, { NotionPageContent } from "./getPageData";
+import { readFile, writeFile } from "../fs-helpers";
+import { getDateStr } from "../blog/blog-helpers";
+
+const path = require("path");
+const slugger = new Slugger();
 
 export type CollectionProperty =
   | ["date", Date]
@@ -8,6 +14,7 @@ export type CollectionProperty =
   | ["userIds", string[]]
   | ["richText", RichTextProp[]]
   | ["users", NotionUser[]]
+  | ["pageContent", NotionPageContent]
   | ["text", string]
   | ["checked", boolean];
 export type CollectionPropertyType = CollectionProperty[0];
@@ -16,6 +23,8 @@ export type CollectionRow = {
   id: string;
   Slug: string;
   PageCover: string;
+  PageContent: CollectionPropertyMap["pageContent"] | null;
+  PreviewContent: CollectionPropertyMap["pageContent"] | null;
   [key: string]: null | string | CollectionProperty;
 };
 
@@ -26,6 +35,7 @@ export type CollectionPropertyMap = {
   users: ["users", NotionUser[]];
   text: ["text", string];
   richText: ["richText", RichTextProp[]];
+  pageContent: ["pageContent", NotionPageContent];
   checked: ["checked", boolean];
 };
 
@@ -35,34 +45,80 @@ export type CollectionTable<T extends CollectionRow = CollectionRow> = {
 
 export default async function getCollectionData<
   T extends CollectionRow = CollectionRow
->(collectionBlock: NotionBlock, config: { queryUsers?: boolean } = {}) {
-  const { queryUsers = false } = config;
-
-  const slugger = new Slugger();
-  const { value } = collectionBlock;
+>(
+  collectionBlock: NotionBlock,
+  config: {
+    queryUsers?: boolean;
+    queryPageContent?: boolean;
+    separatePreviewContent?: boolean;
+  } = {}
+) {
   let table: CollectionTable<T> = {};
 
-  const collection = await queryCollection({
-    collectionId: value.collection_id,
-    collectionViewId: value.view_ids[0]
-  });
+  const { value } = collectionBlock;
+  const collectionId = value.collection_id;
+  const collectionViewId = value.view_ids[0];
+
+  const {
+    queryUsers = false,
+    queryPageContent = false,
+    separatePreviewContent = queryPageContent && config.separatePreviewContent
+  } = config;
+
+  const useCache = process.env.USE_CACHE === "true";
+
+  if (useCache) {
+    const cacheFileSuffix = Object.entries(config)
+      .map(([key, value]) => value && key)
+      .filter(Boolean)
+      .join("__");
+    const cacheIndex = `.${collectionId}_${collectionViewId}_index_data`;
+    const CLLXN_INDEX_CACHE: string = path.resolve(cacheIndex);
+    const cacheFile = `${CLLXN_INDEX_CACHE}${cacheFileSuffix}`;
+    try {
+      const cacheContents = await readFile(cacheFile, "utf8");
+      table = JSON.parse(cacheContents);
+      writeFile(cacheFile, JSON.stringify(table), "utf8")
+        .then(_ => console.info(`Success writing cache file ${getDateStr()}`))
+        .catch(e => console.error(`Error writing cache file: ${e}`));
+      if (table) return table;
+    } catch (e) {
+      console.error(`NON FATAL: error reading cache file`);
+    }
+  }
+
+  const collection = await queryCollection({ collectionId, collectionViewId });
 
   const entries = Object.values(collection.recordMap.block).filter(
     block =>
       block && block.value && block.value.parent_id === value.collection_id
   );
 
-  const collectionId = Object.keys(collection.recordMap.collection)[0];
-
-  const schema = collection.recordMap.collection[collectionId].value.schema;
+  const { schema } = Object.values(collection.recordMap.collection)[0].value;
 
   for (const entry of entries) {
     const props = entry.value && entry.value.properties;
-    const row: CollectionRow = { id: "", Slug: "", PageCover: "" };
+    const row: CollectionRow = {
+      id: "",
+      Slug: "",
+      PageCover: "",
+      PageContent: null,
+      PreviewContent: null
+    };
 
     if (!props) continue;
 
     if (entry.value.content) row.id = entry.value.id;
+
+    if (queryPageContent && row.id) {
+      const { content, previewContent } = await getPageData(row.id, {
+        separatePreviewContent
+      });
+      row.PageContent = ["pageContent", content];
+      if (separatePreviewContent) {
+        row.PreviewContent = ["pageContent", previewContent];
+      }
+    }
 
     for (const columnKey in schema) {
       const defaultCellValue = props[columnKey] && props[columnKey][0].join("");
@@ -129,6 +185,7 @@ export default async function getCollectionData<
     if (key) (table as any)[key] = row;
     if (!key) console.error(`Items has no Slug`);
   }
+
   if (queryUsers) {
     let userIds: string[] = [];
     const paths: [string, string][] = [];
@@ -143,14 +200,15 @@ export default async function getCollectionData<
         }
       }
     }
-    const users = await getNotionUsers(userIds);
+    const users = await getUsers(userIds);
     for (const [slug, key] of paths) {
-      const [_, ids] = table[slug][key] as CollectionPropertyMap["userIds"];
+      const [, ids] = table[slug][key] as CollectionPropertyMap["userIds"];
       const cellUsers: NotionUser[] = ids.map(id => users[id]);
       const cell: CollectionPropertyMap["users"] = ["users", cellUsers];
       table[slug][key as keyof T] = cell as any;
     }
   }
+
   return table;
 }
 

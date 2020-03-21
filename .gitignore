@@ -4,7 +4,7 @@
 .env
 
 # private variables
-private.ts
+keys.js
 
 # dependencies
 /node_modules

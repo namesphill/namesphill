@@ -9,7 +9,7 @@ export type NotionUser = {
   profile_photo: string;
 };
 
-export default async function getNotionUsers(ids: string[]) {
+export default async function getUsers(ids: string[]) {
   ids = [...new Set(ids)];
   const requests = ids.map((id: string) => ({ id, table: "notion_user" }));
   const { results = [] } = await rpc("getRecordValues", { requests });

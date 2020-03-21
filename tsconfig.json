@@ -19,8 +19,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/private.demo.js",
-    "src/private.js",
+    "src/keys.js",
     "src/pages/blog/[slug].tsx.wait"
   ]
 }

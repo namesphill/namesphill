@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import getPageData from "../../lib/notion/getPageData";
 import getPosts from "../../lib/blog/getPosts";
-import { NOTION_TOKEN } from "../../private";
+import { NOTION_TOKEN } from "../../keys";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (typeof req.query.token !== "string") {

@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps = async ({
   const postsTable = await getBlogTable();
   if (typeof slug !== "string") slug = slug.join("");
   const post = postsTable[slug];
-  const [_, published] = post.Published;
+  const [, published] = post.Published;
   if (!post || (published && !preview)) {
     console.error(`Failed to find post for slug: ${slug}`);
     return {

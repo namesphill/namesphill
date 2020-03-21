@@ -1,9 +1,9 @@
 import fetch from "node-fetch";
 import { getError } from "./rpc";
 import { NextApiResponse } from "next";
-import { NOTION_TOKEN, API_ENDPOINT } from "../server/server-constants";
+import { NOTION_TOKEN, API_ENDPOINT } from "./server/server-constants";
 
-export default async function getNotionAsset(
+export default async function getAssetUrls(
   res: NextApiResponse,
   assetUrl: string,
   blockId: string

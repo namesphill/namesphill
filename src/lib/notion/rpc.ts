@@ -1,5 +1,5 @@
 import fetch, { Response } from "node-fetch";
-import { API_ENDPOINT, NOTION_TOKEN } from "../server/server-constants";
+import { API_ENDPOINT, NOTION_TOKEN } from "./server/server-constants";
 
 export type GenericNotionResult = {
   recordMap: {

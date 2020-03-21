@@ -1,72 +1,87 @@
-import Link from "next/link";
-import Header from "../../components/header";
-
-import blogStyles from "../../styles/blog.module.css";
-import sharedStyles from "../../styles/shared.module.css";
-
-import { getDateStr, postIsPublished } from "../../lib/blog/blog-helpers";
-import { textBlock } from "../../lib/notion/renderers";
-import getPosts, { PostsTable } from "../../lib/blog/getPosts";
+import React from "react";
+import getPosts, { PostRow } from "../../lib/blog/getPosts";
 import { GetStaticProps } from "next";
+import CollectionContent from "../../components/collection-content";
+import Link from "next/link";
+import { getPostLink } from "../../lib/blog/blog-helpers";
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const posts = await getPosts();
-  const props = { preview, posts };
+  const postsTable = await getPosts();
+  let posts = Object.values(postsTable);
+  posts = JSON.parse(JSON.stringify(posts));
+  const props: BlogIndexProps = { preview, posts };
   return { props, revalidate: 10 };
 };
 
 export type BlogIndexProps = {
-  posts: PostsTable;
+  posts: PostRow[];
   preview: boolean;
 };
 
 export default function BlogIndex({
-  posts,
+  posts: items,
   preview
 }: BlogIndexProps): JSX.Element {
-  return (
-    <>
-      <Header titlePre="Blog" />
-      <div className={`${sharedStyles.layout} ${blogStyles.blogIndex}`}>
-        <h1>My Blog</h1>
-        {!Object.keys(posts).length && (
-          <p className={blogStyles.noPosts}>There are no posts yet</p>
-        )}
-      </div>
-    </>
+  const title = "Blog";
+  const CollectionItem = props => (
+    <div>
+      <br />
+      <Link href="/blog/[slug]" as={getPostLink(props.Slug)}>
+        {JSON.stringify(props, null, 2)}
+      </Link>
+      <br />
+      <hr />
+    </div>
   );
+  const props = { title, CollectionItem, items, preview };
+  return <CollectionContent<PostRow> {...props} />;
 }
 /** 
- {Object.values(posts).map(post => {
-          return (
-            <div className={blogStyles.postPreview} key={post.Slug}>
-              <h3>
-                <Link href="/blog/[slug]" as={getBlogLink(post.Slug)}>
-                  <div className={blogStyles.titleContainer}>
-                    {!post.Published && (
-                      <span className={blogStyles.draftBadge}>Draft</span>
-                    )}
-                    <a>{post.Name}</a>
-                  </div>
-                </Link>
-              </h3>
-              {post.Authors.length > 0 && (
-                <div className="authors">By: {post.Authors.join(" ")}</div>
-              )}
-              {post.Date && (
-                <div className="posted">Posted: {getDateStr(post.Date)}</div>
-              )}
-              <p>
-                {(!post.preview || post.preview.length === 0) &&
-                  "No preview available"}
-                {(post.preview || []).map((block, idx) =>
-                  textBlock(block, true, `${post.Slug}${idx}`)
-                )}
-              </p>
-            </div>
-          );
-        })}
+  <Header titlePre="Blog" />
+  {preview && (
+    <div className={blogStyles.previewAlertContainer}>
+      <div className={blogStyles.previewAlert}>
+        <b>Note:</b>
+        {` `}Viewing in preview mode{' '}
+        <Link href={`/api/clear-preview`}>
+          <button className={blogStyles.escapePreview}>Exit Preview</button>
+        </Link>
       </div>
-    </>
-  );
+    </div>
+  )}
+  <div className={`${sharedStyles.layout} ${blogStyles.blogIndex}`}>
+    <h1>My Notion Blog</h1>
+    {posts.length === 0 && (
+      <p className={blogStyles.noPosts}>There are no posts yet</p>
+    )}
+    {posts.map(post => {
+      return (
+        <div className={blogStyles.postPreview} key={post.Slug}>
+          <h3>
+            <Link href="/blog/[slug]" as={getBlogLink(post.Slug)}>
+              <div className={blogStyles.titleContainer}>
+                {!post.Published && (
+                  <span className={blogStyles.draftBadge}>Draft</span>
+                )}
+                <a>{post.Page}</a>
+              </div>
+            </Link>
+          </h3>
+          {post.Authors.length > 0 && (
+            <div className="authors">By: {post.Authors.join(' ')}</div>
+          )}
+          {post.Date && (
+            <div className="posted">Posted: {getDateStr(post.Date)}</div>
+          )}
+          <p>
+            {(!post.preview || post.preview.length === 0) &&
+              'No preview available'}
+            {(post.preview || []).map((block, idx) =>
+              textBlock(block, true, `${post.Slug}${idx}`)
+            )}
+          </p>
+        </div>
+      )
+    })}
+  </div>
 */

@@ -1,14 +1,24 @@
 import { loadPageChunk } from "./loadPageChunk";
+import { readFile, writeFile } from "../fs-helpers";
 
-export default async function getPageData(pageId: string) {
+export default async function getPageData(
+  pageId: string,
+  config: { separatePreviewContent?: boolean; limit?: number } = {}
+) {
   try {
-    const data = await loadPageChunk({ pageId });
+    const { separatePreviewContent, limit } = config;
+    const data = await loadPageChunk({ pageId, limit });
     const blocks = Object.values(data.recordMap.block);
     if (blocks[0] && blocks[0].value.content) blocks.splice(0, 3);
-    return { blocks, content: parseBlocks(blocks) };
+    const fullContent = parseBlocks(blocks);
+    if (separatePreviewContent) {
+      const [previewContent, content] = splitContent(fullContent);
+      return { blocks, content, previewContent };
+    }
+    return { blocks, content: fullContent, previewContent: [] };
   } catch (err) {
     console.error(`Failed to load pageData for ${pageId}`, err);
-    return { blocks: [], content: [] };
+    return { blocks: [], content: [], previewContent: [] };
   }
 }
 
@@ -48,4 +58,14 @@ export function parseBlocks(blocks: NotionBlock[]): NotionPageContent {
     }
   }
   return content;
+}
+
+const nonPreviewTypes = new Set(["editor", "page", "collection_view"]);
+export function splitContent(content: NotionPageContent) {
+  const dividerIndex = content.findIndex(([type]) => type === "divider");
+  const previewBlocks = content
+    .splice(0, dividerIndex)
+    .filter(([type]) => !nonPreviewTypes.has(type));
+  const contentBlocks = content.splice(dividerIndex);
+  return [previewBlocks, contentBlocks];
 }

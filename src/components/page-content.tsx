@@ -7,9 +7,9 @@ import PreviewAlert from "./preview-alert";
 import ContentItem from "./content-item";
 
 export type PageContentProps = {
-  content: NotionPageContent;
-  pageName: string;
-  pageHead: JSX.Element | JSX.Element[];
+  content?: NotionPageContent;
+  pageName?: string;
+  pageHeading?: JSX.Element | JSX.Element[];
   previewConfigs?: {
     active: boolean;
     key: string;
@@ -18,33 +18,23 @@ export type PageContentProps = {
 };
 
 export default function PageContent({
-  content,
-  pageHead,
-  pageName,
+  content = [],
+  pageHeading = <div>[Page Heading]</div>,
+  pageName = "[No Title]",
   previewConfigs
 }: PageContentProps): JSX.Element {
   const router = useRouter();
-  let listTagName: string | null = null;
-  let listLastId: string | null = null;
-  let listMap: {
-    [id: string]: {
-      key: string;
-      isNested?: boolean;
-      nested: string[];
-      children: React.ReactFragment;
-    };
-  } = {};
 
   if (router.isFallback) return <div>Loading...</div>;
   const PageHeader = (
     <>
       <Header titlePre={pageName} />
       <h1>{pageName || ""}</h1>
-      {pageHead}
+      {pageHeading}
     </>
   );
-  const Empty = <p>This post has no content</p>;
-  const PageContent = content.map(ContentItem) || Empty;
+  const Empty = <p>This page has no content</p>;
+  const PageContent = content.length ? content.map(ContentItem) : Empty;
   return (
     <div className={contentStyles.post}>
       {previewConfigs && previewConfigs.active && (

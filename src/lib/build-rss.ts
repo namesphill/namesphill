@@ -1,12 +1,10 @@
 import { resolve } from "path";
 import { writeFile } from "./fs-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
-
-import { textBlock } from "./notion/renderers";
 import getPosts, { PostRow } from "./blog/getPosts";
-import getNotionUsers, { NotionUser } from "./notion/getNotionUsers";
 import { postIsPublished, getPostLink } from "./blog/blog-helpers";
 import RichText from "../components/rich-text";
+import { NotionUser } from "./notion/getUsers";
 
 // must use weird syntax to bypass auto replacing of NODE_ENV
 process.env["NODE" + "_ENV"] = "production";

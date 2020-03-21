@@ -4,9 +4,8 @@ import getCollectionData, {
   CollectionPropertyMap,
   CollectionRow
 } from "../notion/getCollectionData";
-import { getPagePreview } from "../notion/getPagePreview";
 import { readFile, writeFile } from "../fs-helpers";
-import { BLOG_INDEX_ID, BLOG_INDEX_CACHE } from "../server/server-constants";
+import { BLOG_INDEX_ID } from "../notion/server/server-constants";
 import { loadPageChunk } from "../notion/loadPageChunk";
 
 export interface PostRow extends CollectionRow {
@@ -16,12 +15,15 @@ export interface PostRow extends CollectionRow {
   Authors: CollectionPropertyMap["users"];
   Name: CollectionPropertyMap["text"];
   Preview: CollectionPropertyMap["richText"];
+  Content: CollectionPropertyMap["pageContent"];
 }
 export type PostsTable = CollectionTable<PostRow>;
 export default async function getPosts({ includePreviews = true } = {}) {
   let postsTable: PostsTable = null;
   const useCache = process.env.USE_CACHE === "true";
-  const cacheFile = `${BLOG_INDEX_CACHE}${includePreviews ? "_previews" : ""}`;
+  const cacheFile = `${"CLLXN_INDEX_CACHE"}${
+    includePreviews ? "_previews" : ""
+  }`;
 
   if (useCache) {
     try {
@@ -60,9 +62,6 @@ export default async function getPosts({ includePreviews = true } = {}) {
           })
       );
     }
-
-    if (useCache)
-      writeFile(cacheFile, JSON.stringify(postsTable), "utf8").catch(() => {});
   }
 
   return postsTable;
