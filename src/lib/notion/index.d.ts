@@ -61,6 +61,28 @@ type DatePropertyValue = [
 ];
 type DateProp = [DatePropertyValue];
 
+type MediaPropertyValue = [
+  "‣",
+  [
+    [
+      "d",
+      {
+        type: "datetimerange" | "date";
+        time_zone: string;
+        start_date: string;
+        start_time?: string;
+        end_date?: string;
+        end_time?: string;
+        reminder?: {
+          unit: "minute" | "hour" | "day";
+          value: number;
+        };
+      }
+    ]
+  ]
+];
+type MediaProp = [MediaPropertyValue];
+
 type LinkPropertyValue = [string, [["a", string]]];
 type LinkProp = [LinkPropertyValue];
 
@@ -94,7 +116,7 @@ type ColoredTextPropertyValue = [string, [["c", NotionColor]]];
 type ColoredTextProp = [BoldPropertyValue];
 
 type TextPropertyValue = [string];
-type TextProp = [[string]];
+type TextProp = [TextPropertyValue];
 
 type RichTextPropertyValue =
   | UserPropertyValue
@@ -115,6 +137,8 @@ type NotionBlockType =
   | "video"
   | "embed"
   | "header"
+  | "bulleted_list"
+  | "numbered_list"
   | "sub_header"
   | "sub_sub_header"
   | "code"
@@ -123,6 +147,18 @@ type NotionBlockType =
   | "collection_view"
   | "tweet";
 
+type NotionBlockFormat = {
+  /// Block is page
+  page_icon: string;
+  page_cover: string;
+  page_cover_position: number;
+  /// Block is block
+  block_width: number;
+  block_height: number;
+  display_source: string;
+  block_aspect_ratio: number;
+};
+
 type NotionBlock = {
   role: string;
   value: {
@@ -130,15 +166,12 @@ type NotionBlock = {
     version: number;
     type: NotionBlockType;
     properties?: {
-      title: TextProp | RichTextProp;
+      title: RichTextProp;
       [key: string]: TextProp | UserProp | DateProp | LinkProp | PageProp;
     };
     content: string[];
-    format: {
-      page_icon: string;
-      page_cover: string;
-      page_cover_position: number;
-    };
+    format: NotionBlockFormat;
+    file_ids?: string[];
     permissions: {
       role: string;
       type: string;
@@ -167,8 +200,10 @@ type NotionBlock = {
     created_by_id: string;
     last_edited_by_table: string;
     last_edited_by_id: string;
-    given_name: string;
-    family_name: string;
+    given_name?: string;
+    family_name?: string;
+    email?: string;
+    profile_photo?: string;
   };
 };
 

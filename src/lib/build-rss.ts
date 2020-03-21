@@ -3,7 +3,7 @@ import { writeFile } from "./fs-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { textBlock } from "./notion/renderers";
-import getBlogIndex from "./blog/getBlogIndex";
+import getBlogTable from "./blog/getBlogTable";
 import getNotionUsers from "./notion/getNotionUsers";
 import { postIsPublished, getBlogLink } from "./blog-helpers";
 
@@ -71,7 +71,7 @@ function createRSS(blogPosts = []) {
 }
 
 async function main() {
-  const postsTable = await getBlogIndex();
+  const postsTable = await getBlogTable();
   const neededAuthors = new Set<string>();
 
   const blogPosts = Object.keys(postsTable)

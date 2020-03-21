@@ -7,13 +7,13 @@ const collectText = (el, acc = []) => {
   return acc.join("").trim();
 };
 
-export default ({
+export default function({
   children: component,
   id
 }: {
   children: JSX.Element;
   id?: any;
-}) => {
+}): JSX.Element {
   const children = component.props.children || "";
   let text = children;
 
@@ -29,4 +29,4 @@ export default ({
       {component}
     </a>
   );
-};
+}

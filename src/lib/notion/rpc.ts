@@ -36,7 +36,7 @@ export type NotionLoadPageChunkBody = {
 export type NotionGetRecordValuesBody = {
   requests: {
     id: string;
-    table: "notion_user";
+    table: string;
   }[];
 };
 

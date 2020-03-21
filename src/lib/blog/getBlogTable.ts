@@ -1,12 +1,24 @@
 import { Sema } from "async-sema";
-import getCollectionData from "../notion/getCollectionData";
+import getCollectionData, {
+  CollectionTable,
+  CollectionPropertyMap,
+  CollectionRow
+} from "../notion/getCollectionData";
 import { getPostPreview } from "../notion/getPostPreview";
 import { readFile, writeFile } from "../fs-helpers";
 import { BLOG_INDEX_ID, BLOG_INDEX_CACHE } from "../server/server-constants";
 import { loadPageChunk } from "../notion/loadPageChunk";
 
-export default async function getBlogIndex({ includePreviews = true } = {}) {
-  let postsTable: any = null;
+export interface BlogRow extends CollectionRow {
+  Date: CollectionPropertyMap["date"];
+  Published: CollectionPropertyMap["checked"];
+  Publication: CollectionPropertyMap["text"];
+  Authors: CollectionPropertyMap["users"];
+  Name: CollectionPropertyMap["text"];
+}
+
+export default async function getBlogTable({ includePreviews = true } = {}) {
+  let postsTable: CollectionTable<BlogRow> = null;
   const useCache = process.env.USE_CACHE === "true";
   const cacheFile = `${BLOG_INDEX_CACHE}${includePreviews ? "_previews" : ""}`;
 
@@ -25,26 +37,23 @@ export default async function getBlogIndex({ includePreviews = true } = {}) {
         block => block.value.type === "collection_view"
       );
 
-      postsTable = await getCollectionData(tableBlock, true);
+      postsTable = await getCollectionData<BlogRow>(tableBlock, {
+        queryUsers: true
+      });
     } catch (err) {
       console.warn(`Failed to load Notion posts: ${err}`);
       return {};
     }
 
-    // only get 10 most recent post's previews
-    const postsKeys = Object.keys(postsTable).splice(0, 10);
-
-    const sema = new Sema(3, { capacity: postsKeys.length });
+    const sema = new Sema(3, { capacity: Object.keys(postsTable).length });
 
     if (includePreviews) {
       await Promise.all(
-        postsKeys
+        Object.keys(postsTable)
           .sort((a, b) => {
-            const postA = postsTable[a];
-            const postB = postsTable[b];
-            const timeA = postA.Date;
-            const timeB = postB.Date;
-            return Math.sign(timeB - timeA);
+            const [_, timeA] = postsTable[a].Date;
+            const [__, timeB] = postsTable[b].Date;
+            return Math.sign(timeB.getTime() - timeA.getTime());
           })
           .map(async postKey => {
             await sema.acquire();

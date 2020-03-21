@@ -1,6 +1,8 @@
-export default (
+export default function ExtLink(
   props: React.DetailedHTMLProps<
     React.AnchorHTMLAttributes<HTMLAnchorElement>,
     HTMLAnchorElement
   >
-) => <a {...props} rel="noopener" target={props.target || "_blank"} />;
+): JSX.Element {
+  return <a {...props} rel="noopener" target={props.target || "_blank"} />;
+}

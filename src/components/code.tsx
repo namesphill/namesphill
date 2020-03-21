@@ -1,21 +1,41 @@
-import Prism from 'prismjs'
-import 'prismjs/components/prism-jsx'
-
-const Code = ({ children, language = 'javascript' }) => {
+import Prism from "prismjs";
+import ReactJSXParser from "@zeit/react-jsx-parser";
+import "prismjs/components/prism-jsx";
+import dynamicComponents from "./dynamic";
+export type CodeProps = {
+  content: TextProp;
+  language: string;
+};
+export default function Code({
+  content,
+  language = "javascript"
+}: CodeProps): JSX.Element {
+  const [[text]] = content;
+  if (language === "LiveScript") {
+    return (
+      <ReactJSXParser
+        jsx={text}
+        components={dynamicComponents}
+        componentsOnly={false}
+        renderInpost={false}
+        allowUnknownElements={true}
+        blacklistedTags={["script", "style"]}
+      />
+    );
+  }
   return (
     <>
       <pre>
         <code
           dangerouslySetInnerHTML={{
             __html: Prism.highlight(
-              children,
+              text,
               Prism.languages[language.toLowerCase()] ||
                 Prism.languages.javascript
-            ),
+            )
           }}
         />
       </pre>
-
       <style jsx>{`
         pre {
           tab-size: 2;
@@ -32,7 +52,5 @@ const Code = ({ children, language = 'javascript' }) => {
         }
       `}</style>
     </>
-  )
+  );
 }
-
-export default Code

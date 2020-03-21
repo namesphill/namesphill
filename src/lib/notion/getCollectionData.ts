@@ -1,11 +1,13 @@
 import Slugger from "github-slugger";
 import queryCollection from "./queryCollection";
 import { normalizeSlug } from "../blog-helpers";
+import getNotionUsers, { NotionUser } from "./getNotionUsers";
 
 export type CollectionProperty =
   | ["date", Date]
   | ["link", string]
-  | ["user", string[]]
+  | ["userIds", string[]]
+  | ["users", NotionUser[]]
   | ["text", string]
   | ["checked", boolean];
 export type CollectionPropertyType = CollectionProperty[0];
@@ -14,18 +16,30 @@ export type CollectionRow = {
   id: string;
   Slug: string;
   PageCover: string;
-  [key: string]: string | CollectionProperty;
+  [key: string]: null | string | CollectionProperty;
 };
 
-export type CollectionTable = { [key: string]: CollectionRow };
+export type CollectionPropertyMap = {
+  date: ["date", Date];
+  link: ["link", string];
+  userIds: ["userIds", string[]];
+  users: ["users", NotionUser[]];
+  text: ["text", string];
+  checked: ["checked", boolean];
+};
 
-export default async function getCollectionData(
-  collectionBlock: NotionBlock,
-  isPosts = false
-) {
+export type CollectionTable<T extends CollectionRow = CollectionRow> = {
+  [key: string]: T;
+};
+
+export default async function getCollectionData<
+  T extends CollectionRow = CollectionRow
+>(collectionBlock: NotionBlock, config: { queryUsers?: boolean } = {}) {
+  const { queryUsers = false } = config;
+
   const slugger = new Slugger();
   const { value } = collectionBlock;
-  let table: CollectionTable = {};
+  let table: CollectionTable<T> = {};
 
   const collection = await queryCollection({
     collectionId: value.collection_id,
@@ -65,12 +79,16 @@ export default async function getCollectionData(
             const userIds = userProp
               .filter(arr => arr.length > 1)
               .map(arr => arr[1][0][1]);
-            cell = ["user", userIds];
+            cell = ["userIds", userIds];
             break;
 
           case "d":
             const date = getDateFromProp(blockProp);
             cell = ["date", date];
+            break;
+
+          case "p":
+            // TODO: handle pages
             break;
 
           default:
@@ -86,7 +104,13 @@ export default async function getCollectionData(
       if (cell[1] === "Yes") cell = ["checked", true];
       if (cell[1] === "No") cell = ["checked", false];
       const columnName = schema[columnKey].name;
-      row[columnName] = cell || null;
+      if (columnName === "Slug") {
+        row.Slug = String(cell[1]);
+      } else if (cell[1]) {
+        row[columnName] = cell;
+      } else {
+        row[columnName] = null;
+      }
     }
 
     function getPageCover(pageId: string) {
@@ -100,9 +124,31 @@ export default async function getCollectionData(
     row.Slug = normalizeSlug(row.Slug || slugger.slug(row.Name || ""));
     const key = row.Slug;
 
-    if (isPosts && !key) continue;
-    if (key) table[key] = row;
+    if (!key) continue;
+    if (key) (table as any)[key] = row;
     if (!key) console.error(`Items has no Slug`);
+  }
+  if (queryUsers) {
+    let userIds: string[] = [];
+    const paths: [string, string][] = [];
+    for (const row of Object.values(table)) {
+      const slug = row.Slug;
+      for (const [key, cell] of Object.entries(row)) {
+        if (!cell || typeof cell === "string") continue;
+        const [type, value] = cell;
+        if (type === "userIds") {
+          userIds = userIds.concat(value as string[]);
+          paths.push([slug, key]);
+        }
+      }
+    }
+    const users = await getNotionUsers(userIds);
+    for (const [slug, key] of paths) {
+      const [_, ids] = table[slug][key] as CollectionPropertyMap["userIds"];
+      const cellUsers: NotionUser[] = ids.map(id => users[id]);
+      const cell: CollectionPropertyMap["users"] = ["users", cellUsers];
+      table[slug][key as keyof T] = cell as any;
+    }
   }
   return table;
 }

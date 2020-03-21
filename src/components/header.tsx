@@ -1,25 +1,25 @@
-import Link from 'next/link'
-import Head from 'next/head'
-import ExtLink from './ext-link'
-import { useRouter } from 'next/router'
-import styles from '../styles/header.module.css'
+import Link from "next/link";
+import Head from "next/head";
+import ExtLink from "./ext-link";
+import { useRouter } from "next/router";
+import styles from "../styles/header.module.css";
 
 const navItems: { label: string; page?: string; link?: string }[] = [
-  { label: 'Home', page: '/' },
-  { label: 'Blog', page: '/blog' },
-  { label: 'Contact', page: '/contact' },
-  { label: 'Source Code', link: 'https://github.com/ijjk/notion-blog' },
-]
+  { label: "Home", page: "/" },
+  { label: "Blog", page: "/blog" },
+  { label: "Contact", page: "/contact" },
+  { label: "Source Code", link: "https://github.com/ijjk/notion-blog" }
+];
 
-const ogImageUrl = 'https://notion-blog.now.sh/og-image.png'
+const ogImageUrl = "https://notion-blog.now.sh/og-image.png";
 
-export default ({ titlePre = '' }) => {
-  const { pathname } = useRouter()
+export default function Header({ titlePre = "" }): JSX.Element {
+  const { pathname } = useRouter();
 
   return (
     <header className={styles.header}>
       <Head>
-        <title>{titlePre ? `${titlePre} |` : ''} My Notion Blog</title>
+        <title>{titlePre ? `${titlePre} |` : ""} My Notion Blog</title>
         <meta
           name="description"
           content="An example Next.js site using Notion for the blog"
@@ -35,7 +35,7 @@ export default ({ titlePre = '' }) => {
           <li key={label}>
             {page ? (
               <Link href={page}>
-                <a className={pathname === page ? 'active' : undefined}>
+                <a className={pathname === page ? "active" : undefined}>
                   {label}
                 </a>
               </Link>
@@ -46,5 +46,5 @@ export default ({ titlePre = '' }) => {
         ))}
       </ul>
     </header>
-  )
+  );
 }

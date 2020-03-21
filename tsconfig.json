@@ -20,6 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/private.demo.js",
-    "src/private.js"
+    "src/private.js",
+    "src/pages/blog/[slug].tsx.wait"
   ]
 }
