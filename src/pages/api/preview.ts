@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import getPageData from "../../lib/notion/getPageData";
-import getBlogTable from "../../lib/blog/getBlogTable";
+import getPosts from "../../lib/blog/getPosts";
 import { NOTION_TOKEN } from "../../private";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({ message: "not authorized" });
   }
 
-  const postsTable = await getBlogTable();
+  const postsTable = await getPosts();
 
   if (!postsTable) {
     return res.status(401).json({ message: "Failed to fetch posts" });

@@ -1,12 +1,12 @@
 import Slugger from "github-slugger";
 import queryCollection from "./queryCollection";
-import { normalizeSlug } from "../blog-helpers";
 import getNotionUsers, { NotionUser } from "./getNotionUsers";
 
 export type CollectionProperty =
   | ["date", Date]
   | ["link", string]
   | ["userIds", string[]]
+  | ["richText", RichTextProp[]]
   | ["users", NotionUser[]]
   | ["text", string]
   | ["checked", boolean];
@@ -25,6 +25,7 @@ export type CollectionPropertyMap = {
   userIds: ["userIds", string[]];
   users: ["users", NotionUser[]];
   text: ["text", string];
+  richText: ["richText", RichTextProp[]];
   checked: ["checked", boolean];
 };
 
@@ -174,3 +175,15 @@ export function getDateFromProp(dateProp: DatePropertyValue[1][0]) {
     return new Date("Invalid Date");
   }
 }
+
+/**
+ * Creates default slug or normalizes one
+ * @param slug Base slug
+ */
+export const normalizeSlug = (slug: string): string => {
+  let startingSlash = slug.startsWith("/");
+  let endingSlash = slug.endsWith("/");
+  if (startingSlash) slug = slug.substr(1);
+  if (endingSlash) slug = slug.substr(0, slug.length - 1);
+  return startingSlash || endingSlash ? normalizeSlug(slug) : slug;
+};

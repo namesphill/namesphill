@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import getPageData from "../../lib/notion/getPageData";
-import getBlogTable from "../../lib/blog/getBlogTable";
-import { getBlogLink } from "../../lib/blog-helpers";
+import getPosts from "../../lib/blog/getPosts";
+import { getPostLink } from "../../lib/blog/blog-helpers";
 import { NOTION_TOKEN } from "../../private";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (typeof req.query.slug !== "string") {
     return res.status(401).json({ message: "invalid slug" });
   }
-  const postsTable = await getBlogTable();
+  const postsTable = await getPosts();
   const post = postsTable[req.query.slug];
 
   if (!post) {
@@ -35,6 +35,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   res.setPreviewData({});
-  res.writeHead(307, { Location: getBlogLink(post.Slug) });
+  res.writeHead(307, { Location: getPostLink(post.Slug) });
   res.end();
 };

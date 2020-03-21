@@ -4,38 +4,40 @@ import Header from "../../components/header";
 import blogStyles from "../../styles/blog.module.css";
 import sharedStyles from "../../styles/shared.module.css";
 
-import {
-  getBlogLink,
-  getDateStr,
-  postIsPublished
-} from "../../lib/blog-helpers";
+import { getDateStr, postIsPublished } from "../../lib/blog/blog-helpers";
 import { textBlock } from "../../lib/notion/renderers";
-import getNotionUsers from "../../lib/notion/getNotionUsers";
-import getBlogTable from "../../lib/blog/getBlogTable";
+import getPosts, { PostsTable } from "../../lib/blog/getPosts";
+import { GetStaticProps } from "next";
 
-export async function getStaticProps({ preview }) {
-  await getNotionUsers(["4e919141-98cf-4ec0-b969-3476645cd6e2"]);
-  const postsTable = await getBlogTable();
-  console.log(JSON.stringify(postsTable, null, 3));
-  return {
-    props: {
-      preview: preview || false,
-      posts: []
-    },
-    revalidate: 10
-  };
-}
+export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
+  const posts = await getPosts();
+  const props = { preview, posts };
+  return { props, revalidate: 10 };
+};
 
-export default ({ posts = [], preview }) => {
+export type BlogIndexProps = {
+  posts: PostsTable;
+  preview: boolean;
+};
+
+export default function BlogIndex({
+  posts,
+  preview
+}: BlogIndexProps): JSX.Element {
   return (
     <>
       <Header titlePre="Blog" />
       <div className={`${sharedStyles.layout} ${blogStyles.blogIndex}`}>
-        <h1>My Notion Blog</h1>
-        {posts.length === 0 && (
+        <h1>My Blog</h1>
+        {!Object.keys(posts).length && (
           <p className={blogStyles.noPosts}>There are no posts yet</p>
         )}
-        {posts.map(post => {
+      </div>
+    </>
+  );
+}
+/** 
+ {Object.values(posts).map(post => {
           return (
             <div className={blogStyles.postPreview} key={post.Slug}>
               <h3>
@@ -67,4 +69,4 @@ export default ({ posts = [], preview }) => {
       </div>
     </>
   );
-};
+*/
