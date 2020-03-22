@@ -159,6 +159,19 @@ type NotionBlockFormat = {
   block_aspect_ratio: number;
 };
 
+type NotionBlockSchema = {
+  [key: string]: {
+    name: string;
+    type: NotionSchemaTypes;
+    options?: {
+      id: string;
+      color: string;
+      value: string;
+      [key: string]: string;
+    };
+  };
+};
+
 type NotionBlock = {
   role: string;
   value: {
@@ -179,18 +192,7 @@ type NotionBlock = {
     }[];
     collection_id: string;
     view_ids: string[];
-    schema: {
-      [key: string]: {
-        name: string;
-        type: NotionSchemaTypes;
-        options?: {
-          id: string;
-          color: string;
-          value: string;
-          [key: string]: string;
-        };
-      };
-    };
+    schema: NotionBlockSchema;
     created_time: number;
     last_edited_time: number;
     parent_id: string;

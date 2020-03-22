@@ -60,7 +60,7 @@ export function parseBlocks(blocks: NotionBlock[]): NotionPageContent {
   return content;
 }
 
-const nonPreviewTypes = new Set(["editor", "page", "collection_view"]);
+const nonPreviewTypes = new Set<NotionBlockType>(["page", "collection_view"]);
 export function splitContent(content: NotionPageContent) {
   const dividerIndex = content.findIndex(([type]) => type === "divider");
   const previewBlocks = content

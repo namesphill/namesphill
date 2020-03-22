@@ -12,7 +12,6 @@ export interface PostRow extends CollectionRow {
   Published: CollectionPropertyMap["checked"];
   Publication: CollectionPropertyMap["text"];
   Authors: CollectionPropertyMap["users"];
-  Name: CollectionPropertyMap["text"];
 }
 
 export type PostsTable = CollectionTable<PostRow>;
@@ -25,7 +24,6 @@ export default async function getPosts(configs: GetCollectionDataConfigs = {}) {
     const pageBlocks = Object.values(data.recordMap.block);
     const tableBlock = pageBlocks.find(blockIsCollxnView);
     postsTable = await getCollectionData<PostRow>(tableBlock, configs);
-    console.log(postsTable);
   } catch (error) {
     console.warn(`Failed to load Notion posts: ${error}`);
     return [];

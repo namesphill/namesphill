@@ -11,10 +11,11 @@ export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
     separatePreviewContent: true,
   });
   const post = posts.find(({ Slug }) => slug === Slug);
+  console.log(JSON.stringify(post, null, 3));
   const { PageContent, Name } = post;
   const props: PageContentProps = {
     content: PageContent[1],
-    name: Name[1],
+    name: Name,
     previewConfigs: {
       active: preview || false,
       key: "slug",
