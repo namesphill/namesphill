@@ -1,5 +1,5 @@
 import fetch, { Response } from "node-fetch";
-import { API_ENDPOINT, NOTION_TOKEN } from "./server/server-constants";
+import { API_ENDPOINT, NOTION_TOKEN } from "../server/server-constants";
 
 export type GenericNotionResult = {
   recordMap: {
@@ -86,9 +86,9 @@ export default async function rpc<T extends NotionFunctionName>(
     method: "POST",
     headers: {
       "content-type": "application/json",
-      cookie: `token_v2=${NOTION_TOKEN}`
+      cookie: `token_v2=${NOTION_TOKEN}`,
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 
   if (res.ok) return res.json();

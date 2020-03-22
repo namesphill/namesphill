@@ -2,7 +2,7 @@ import getCollectionData, {
   CollectionTable,
   CollectionPropertyMap,
   CollectionRow,
-  GetCollectionDataConfigs
+  GetCollectionDataConfigs,
 } from "../notion/getCollectionData";
 import { BLOG_INDEX_ID } from "../server/server-constants";
 import { loadPageChunk } from "../notion/loadPageChunk";
@@ -13,8 +13,6 @@ export interface PostRow extends CollectionRow {
   Publication: CollectionPropertyMap["text"];
   Authors: CollectionPropertyMap["users"];
   Name: CollectionPropertyMap["text"];
-  Preview: CollectionPropertyMap["richText"];
-  Content: CollectionPropertyMap["pageContent"];
 }
 
 export type PostsTable = CollectionTable<PostRow>;
@@ -27,6 +25,7 @@ export default async function getPosts(configs: GetCollectionDataConfigs = {}) {
     const pageBlocks = Object.values(data.recordMap.block);
     const tableBlock = pageBlocks.find(blockIsCollxnView);
     postsTable = await getCollectionData<PostRow>(tableBlock, configs);
+    console.log(postsTable);
   } catch (error) {
     console.warn(`Failed to load Notion posts: ${error}`);
     return [];

@@ -8,21 +8,20 @@ export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
   const posts = await getPosts({
     queryUsers: true,
     queryPageContent: true,
-    separatePreviewContent: true
+    separatePreviewContent: true,
   });
   const post = posts.find(({ Slug }) => slug === Slug);
-  const { Content, Name } = post;
+  const { PageContent, Name } = post;
   const props: PageContentProps = {
-    content: Content[1],
+    content: PageContent[1],
     name: Name[1],
-    heading: <>[Heading]</>,
     previewConfigs: {
-      active: preview,
+      active: preview || false,
       key: "slug",
-      value: slug
-    }
+      value: slug,
+    },
   };
-  return { props, preview };
+  return { props };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -34,4 +33,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true };
 };
 
-export default PageContent;
+export type BlogProps = NonNullable<
+  Pick<PageContentProps, "content" | "previewConfigs" | "heading">
+>;
+
+export default function Blog(props: BlogProps) {
+  return <PageContent {...props} heading={<>[Heading]</>} />;
+}

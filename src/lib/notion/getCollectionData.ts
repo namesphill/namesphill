@@ -62,7 +62,7 @@ export default async function getCollectionData<
     contentBlockLimit,
     queryUsers = false,
     queryPageContent = false,
-    separatePreviewContent = queryPageContent && configs.separatePreviewContent
+    separatePreviewContent = queryPageContent && configs.separatePreviewContent,
   } = configs;
 
   const useCache = process.env.USE_CACHE === "true";
@@ -82,14 +82,14 @@ export default async function getCollectionData<
     }
   }
 
-  if (!table) {
+  if (JSON.stringify(table) === "{}") {
     const collection = await queryCollection({
       collectionId,
-      collectionViewId
+      collectionViewId,
     });
 
     const entries = Object.values(collection.recordMap.block).filter(
-      block =>
+      (block) =>
         block && block.value && block.value.parent_id === value.collection_id
     );
 
@@ -102,7 +102,7 @@ export default async function getCollectionData<
         Slug: "",
         PageCover: "",
         PageContent: null,
-        PreviewContent: null
+        PreviewContent: null,
       };
 
       if (!props) continue;
@@ -112,7 +112,7 @@ export default async function getCollectionData<
       if (queryPageContent && row.id) {
         const { content, previewContent } = await getPageData(row.id, {
           separatePreviewContent,
-          limit: contentBlockLimit
+          limit: contentBlockLimit,
         });
         row.PageContent = ["pageContent", content];
         if (separatePreviewContent) {
@@ -135,8 +135,8 @@ export default async function getCollectionData<
             case "u":
               const userProp = props[columnKey] as UserProp;
               const userIds = userProp
-                .filter(arr => arr.length > 1)
-                .map(arr => arr[1][0][1]);
+                .filter((arr) => arr.length > 1)
+                .map((arr) => arr[1][0][1]);
               cell = ["userIds", userIds];
               break;
 
@@ -200,8 +200,8 @@ export default async function getCollectionData<
     const timeString = new Date().toTimeString();
     const dateTimeString = dateString + timeString;
     writeFile(cacheFile, JSON.stringify(table), "utf8")
-      .then(_ => console.info(`Success writing cache file ${dateTimeString}`))
-      .catch(e => console.error(`Error writing cache file: ${e}`));
+      .then((_) => console.info(`Success writing cache file ${dateTimeString}`))
+      .catch((e) => console.error(`Error writing cache file: ${e}`));
   }
 
   return table;
@@ -218,7 +218,7 @@ export function getDateFromProp(dateProp: DatePropertyValue[1][0]) {
     const timezoneOffset =
       new Date(
         new Date().toLocaleString("en-US", {
-          timeZone: dateProp[1].time_zone
+          timeZone: dateProp[1].time_zone,
         })
       ).getTime() - new Date().getTime();
 
@@ -241,7 +241,7 @@ export function sortTableByDate<T extends CollectionRow = CollectionRow>(
       b = b instanceof Date ? b : new Date();
       return Math.sign(a.getTime() || 0 - b.getTime() || 0);
     })
-    .forEach(row => (newTable[row.Slug] = row));
+    .forEach((row) => (newTable[row.Slug] = row));
   return newTable;
 }
 
@@ -264,7 +264,7 @@ export async function queryUsersOnTable<
   const users = await getUsers(userIds);
   for (const [slug, key] of paths) {
     const [, ids] = table[slug][key] as CollectionPropertyMap["userIds"];
-    const cellUsers: NotionUser[] = ids.map(id => users[id]);
+    const cellUsers: NotionUser[] = ids.map((id) => users[id]);
     const cell: CollectionPropertyMap["users"] = ["users", cellUsers];
     table[slug][key as keyof T] = cell as any;
   }

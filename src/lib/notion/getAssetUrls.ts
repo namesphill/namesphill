@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { getError } from "./rpc";
 import { NextApiResponse } from "next";
-import { NOTION_TOKEN, API_ENDPOINT } from "./server/server-constants";
+import { NOTION_TOKEN, API_ENDPOINT } from "../server/server-constants";
 
 export default async function getAssetUrls(
   res: NextApiResponse,
@@ -15,7 +15,7 @@ export default async function getAssetUrls(
     method: "POST",
     headers: {
       cookie: `token_v2=${NOTION_TOKEN}`,
-      "content-type": "application/json"
+      "content-type": "application/json",
     },
     body: JSON.stringify({
       urls: [
@@ -23,11 +23,11 @@ export default async function getAssetUrls(
           url: assetUrl,
           permissionRecord: {
             table: "block",
-            id: blockId
-          }
-        }
-      ]
-    })
+            id: blockId,
+          },
+        },
+      ],
+    }),
   });
 
   if (assetRes.ok) {

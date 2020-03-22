@@ -18,12 +18,13 @@ function normalizePageId(id) {
   )}-${id.substr(20)}`;
 }
 
-const NOTION_TOKEN = require("../../../keys").NOTION_TOKEN;
-const BLOG_INDEX_ID = normalizePageId(require("../../keys").BLOG_INDEX_ID);
+const keys = require("../../keys");
+const NOTION_TOKEN = keys.NOTION_TOKEN;
+const BLOG_INDEX_ID = normalizePageId(keys.BLOG_INDEX_ID);
 const API_ENDPOINT = "https://www.notion.so/api/v3";
 
 module.exports = {
   NOTION_TOKEN,
   BLOG_INDEX_ID,
-  API_ENDPOINT
+  API_ENDPOINT,
 };

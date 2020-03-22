@@ -14,7 +14,7 @@ export default function CollectionContent<T>(
 ): JSX.Element {
   const { title, CollectionItem, items, preview } = props;
   const PageHeader = <Header titlePre={title} />;
-  const Empty = <p>There are no posts yet</p>;
+  const Empty = <p style={{ textAlign: "center" }}>There are no posts yet</p>;
   const PageContent = items.length ? items.map(CollectionItem) : Empty;
   return (
     <div>
