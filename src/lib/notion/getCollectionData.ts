@@ -42,16 +42,16 @@ export type CollectionTable<T extends CollectionRow = CollectionRow> = {
   [key: string]: T;
 };
 
+export type GetCollectionDataConfigs = {
+  queryUsers?: boolean;
+  queryPageContent?: boolean;
+  separatePreviewContent?: boolean;
+  contentBlockLimit?: number;
+};
+
 export default async function getCollectionData<
   T extends CollectionRow = CollectionRow
->(
-  collectionBlock: NotionBlock,
-  config: {
-    queryUsers?: boolean;
-    queryPageContent?: boolean;
-    separatePreviewContent?: boolean;
-  } = {}
-) {
+>(collectionBlock: NotionBlock, configs: GetCollectionDataConfigs = {}) {
   let table: CollectionTable<T> = {};
 
   const { value } = collectionBlock;
@@ -59,14 +59,15 @@ export default async function getCollectionData<
   const collectionViewId = value.view_ids[0];
 
   const {
+    contentBlockLimit,
     queryUsers = false,
     queryPageContent = false,
-    separatePreviewContent = queryPageContent && config.separatePreviewContent
-  } = config;
+    separatePreviewContent = queryPageContent && configs.separatePreviewContent
+  } = configs;
 
   const useCache = process.env.USE_CACHE === "true";
-  const cacheFileSuffix = Object.entries(config)
-    .map(([key, value]) => value && key)
+  const cacheFileSuffix = Object.entries(configs)
+    .map(([key, value]) => key + "_" + Number(value))
     .filter(Boolean)
     .join("__");
   const cacheIndex = `.${collectionId}_${collectionViewId}_index_data`;
@@ -110,7 +111,8 @@ export default async function getCollectionData<
 
       if (queryPageContent && row.id) {
         const { content, previewContent } = await getPageData(row.id, {
-          separatePreviewContent
+          separatePreviewContent,
+          limit: contentBlockLimit
         });
         row.PageContent = ["pageContent", content];
         if (separatePreviewContent) {
@@ -180,7 +182,9 @@ export default async function getCollectionData<
       }
       row.PageCover = getPageCover(row.id);
 
-      row.Slug = normalizeSlug(row.Slug || slugger.slug(row.Name || ""));
+      row.Slug = normalizeSlug(
+        row.Slug || slugger.slug((row.Name && row.Name[1]) || "")
+      );
       const key = row.Slug;
 
       if (!key) continue;

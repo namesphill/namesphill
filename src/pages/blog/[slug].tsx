@@ -5,7 +5,23 @@ import { getPostLink, postIsPublished } from "../../lib/blog/blog-helpers";
 
 export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
   const slug = params.slug as string;
-  const props: PageContentProps = {};
+  const posts = await getPosts({
+    queryUsers: true,
+    queryPageContent: true,
+    separatePreviewContent: true
+  });
+  const post = posts.find(({ Slug }) => slug === Slug);
+  const { Content, Name } = post;
+  const props: PageContentProps = {
+    content: Content[1],
+    name: Name[1],
+    heading: <>[Heading]</>,
+    previewConfigs: {
+      active: preview,
+      key: "slug",
+      value: slug
+    }
+  };
   return { props, preview };
 };
 

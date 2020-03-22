@@ -6,8 +6,12 @@ import Link from "next/link";
 import { getPostLink } from "../../lib/blog/blog-helpers";
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const postsTable = await getPosts();
-  let posts = Object.values(postsTable);
+  let posts = await getPosts({
+    queryUsers: true,
+    queryPageContent: true,
+    separatePreviewContent: true,
+    contentBlockLimit: 10
+  });
   posts = JSON.parse(JSON.stringify(posts));
   const props: BlogIndexProps = { preview, posts };
   return { props, revalidate: 10 };
@@ -33,8 +37,8 @@ export default function BlogIndex({
       <hr />
     </div>
   );
-  const props = { title, CollectionItem, items, preview };
-  return <CollectionContent<PostRow> {...props} />;
+  const collectionContentProps = { title, CollectionItem, items, preview };
+  return <CollectionContent<PostRow> {...collectionContentProps} />;
 }
 /** 
   <Header titlePre="Blog" />

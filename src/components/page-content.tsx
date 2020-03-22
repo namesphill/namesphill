@@ -8,8 +8,8 @@ import ContentItem from "./content-item";
 
 export type PageContentProps = {
   content?: NotionPageContent;
-  pageName?: string;
-  pageHeading?: JSX.Element | JSX.Element[];
+  name?: string;
+  heading?: JSX.Element | JSX.Element[];
   previewConfigs?: {
     active: boolean;
     key: string;
@@ -19,8 +19,8 @@ export type PageContentProps = {
 
 export default function PageContent({
   content = [],
-  pageHeading = <div>[Page Heading]</div>,
-  pageName = "[No Title]",
+  heading = <div>[Page Heading]</div>,
+  name = "[No Title]",
   previewConfigs
 }: PageContentProps): JSX.Element {
   const router = useRouter();
@@ -28,9 +28,9 @@ export default function PageContent({
   if (router.isFallback) return <div>Loading...</div>;
   const PageHeader = (
     <>
-      <Header titlePre={pageName} />
-      <h1>{pageName || ""}</h1>
-      {pageHeading}
+      <Header titlePre={name} />
+      <h1>{name || ""}</h1>
+      {heading}
     </>
   );
   const Empty = <p>This page has no content</p>;
