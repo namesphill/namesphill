@@ -19,7 +19,7 @@ function normalizePageId(id) {
 }
 
 const NOTION_TOKEN = require("../../../keys").NOTION_TOKEN;
-const BLOG_INDEX_ID = normalizePageId(require("../../../keys").BLOG_INDEX_ID);
+const BLOG_INDEX_ID = normalizePageId(require("../../keys").BLOG_INDEX_ID);
 const API_ENDPOINT = "https://www.notion.so/api/v3";
 
 module.exports = {
