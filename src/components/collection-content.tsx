@@ -7,14 +7,21 @@ export type CollectionContentProps<T> = {
   CollectionItem: (props: T) => JSX.Element;
   items: T[];
   preview: boolean;
+  emptyMessage?: string;
 };
 
 export default function CollectionContent<T>(
   props: CollectionContentProps<T>
 ): JSX.Element {
-  const { title, CollectionItem, items, preview } = props;
+  const {
+    title,
+    CollectionItem,
+    items,
+    preview,
+    emptyMessage = "Oh, such empty",
+  } = props;
   const PageHeader = <Header titlePre={title} />;
-  const Empty = <p style={{ textAlign: "center" }}>There are no posts yet</p>;
+  const Empty = <p style={{ textAlign: "center" }}>{emptyMessage}</p>;
   const PageContent = items.length ? items.map(CollectionItem) : Empty;
   return (
     <div>

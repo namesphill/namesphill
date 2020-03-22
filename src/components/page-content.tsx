@@ -21,7 +21,7 @@ export default function PageContent({
   content = [],
   heading = <div>[Page Heading]</div>,
   name = "[No Title]",
-  previewConfigs
+  previewConfigs,
 }: PageContentProps): JSX.Element {
   const router = useRouter();
 
@@ -29,7 +29,7 @@ export default function PageContent({
   const PageHeader = (
     <>
       <Header titlePre={name} />
-      <h1>{name || ""}</h1>
+      <h1>{name}</h1>
       {heading}
     </>
   );
