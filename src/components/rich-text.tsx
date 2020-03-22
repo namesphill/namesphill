@@ -1,15 +1,10 @@
 import React from "react";
 import ExtLink from "./ext-link";
-import User from "./user";
 export default function RichText(props: {
   content: RichTextProp;
   key?: string;
 }): JSX.Element {
-  const baseKey =
-    props.key ||
-    Math.random()
-      .toString(16)
-      .slice(2);
+  const baseKey = props.key || Math.random().toString(16).slice(2);
   const children: JSX.Element[] = [];
   let index = 0;
   for (const [text, blockProps] of props.content) {
@@ -47,8 +42,7 @@ export default function RichText(props: {
         break;
 
       case "u":
-        const userId = modifier;
-        children.push(<User key={key} userId={userId} />);
+        // TODO: handle User
         break;
 
       default:

@@ -9,20 +9,22 @@ export default function Media({
   type,
   format = {},
   id = "",
-  file_ids
+  file_ids,
 }: MediaProps): JSX.Element {
   const {
     block_width,
     block_height,
     display_source,
-    block_aspect_ratio
+    block_aspect_ratio,
   } = format;
   const baseBlockWidth = 768;
   const roundFactor = Math.pow(10, 2);
 
   const width = block_width
-    ? `${Math.round((block_width / baseBlockWidth) * 100 * roundFactor) /
-        roundFactor}%`
+    ? `${
+        Math.round((block_width / baseBlockWidth) * 100 * roundFactor) /
+        roundFactor
+      }%`
     : block_height || "100%";
 
   const isImage = type === "image";
@@ -34,19 +36,19 @@ export default function Media({
         height: "100%",
         border: "none",
         position: "absolute",
-        top: 0
+        top: 0,
       }
     : {
         width,
         border: "none",
         height: block_height,
         display: "block",
-        maxWidth: "100%"
+        maxWidth: "100%",
       };
 
   let child: JSX.Element = null;
 
-  if (!isImage && !file_ids) {
+  if (!isImage && !(file_ids || file_ids.length)) {
     child = (
       <iframe
         style={childStyle}
@@ -76,7 +78,7 @@ export default function Media({
     <div
       style={{
         paddingTop: `${Math.round(block_aspect_ratio * 100)}%`,
-        position: "relative"
+        position: "relative",
       }}
       className="asset-wrapper"
     >

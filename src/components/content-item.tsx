@@ -13,10 +13,10 @@ export default function ContentItem(props: NotionContentItem): JSX.Element {
       html: "",
       language: "",
       id: "",
-      file_ids: undefined
-    }
+      file_ids: [],
+    },
   ] = props;
-  const [[text]] = content;
+  const [[text]] = content || [[""]];
   if (type === "divider") return <hr />;
   if (type === "text") return <RichText content={content} />;
   if (type === "header") return <h1>{text}</h1>;

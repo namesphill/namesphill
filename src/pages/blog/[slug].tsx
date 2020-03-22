@@ -1,7 +1,13 @@
 import PageContent, { PageContentProps } from "../../components/page-content";
 import { GetStaticProps, GetStaticPaths } from "next";
 import getPosts from "../../lib/blog/getPosts";
-import { getPostLink, postIsPublished } from "../../lib/blog/blog-helpers";
+import {
+  getPostLink,
+  postIsPublished,
+  getDateString,
+} from "../../lib/blog/blog-helpers";
+import { NotionUser } from "../../lib/notion/getUsers";
+import UserCard from "../../components/user";
 
 export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
   const slug = params.slug as string;
@@ -11,17 +17,24 @@ export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
     separatePreviewContent: true,
   });
   const post = posts.find(({ Slug }) => slug === Slug);
-  console.log(JSON.stringify(post, null, 3));
-  const { PageContent, Name } = post;
-  const props: PageContentProps = {
-    content: PageContent[1],
-    name: Name,
+  const {
+    PageContent: [, content],
+    Name: name,
+    Authors: [, authors],
+    Date: [, date],
+  } = post;
+  let props: BlogProps = {
+    content,
+    name,
+    authors,
+    dateString: getDateString(date),
     previewConfigs: {
       active: preview || false,
       key: "slug",
       value: slug,
     },
   };
+  props = JSON.parse(JSON.stringify(props));
   return { props };
 };
 
@@ -34,10 +47,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true };
 };
 
-export type BlogProps = NonNullable<
-  Pick<PageContentProps, "content" | "previewConfigs" | "heading">
->;
+export interface BlogProps
+  extends NonNullable<
+    Pick<PageContentProps, "content" | "previewConfigs" | "heading" | "name">
+  > {
+  authors: NotionUser[];
+  dateString: string;
+}
+
+export function BlogHeading(props: BlogProps) {
+  const { authors, dateString } = props;
+  return (
+    <>
+      <div>
+        {authors.map((user) => (
+          <UserCard {...user} caption="Author" />
+        ))}
+      </div>
+      <div>Published: {dateString}</div>
+    </>
+  );
+}
 
 export default function Blog(props: BlogProps) {
-  return <PageContent {...props} heading={<>[Heading]</>} />;
+  return <PageContent {...props} heading={BlogHeading(props)} />;
 }

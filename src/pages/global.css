@@ -353,6 +353,10 @@ code {
   }
 }
 
+twitter-widget {
+  margin: auto;
+}
+
 .dotted {
   border-bottom: 1px dashed black;
 }

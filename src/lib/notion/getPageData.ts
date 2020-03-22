@@ -1,5 +1,5 @@
+import fetch from "node-fetch";
 import { loadPageChunk } from "./loadPageChunk";
-import { readFile, writeFile } from "../fs-helpers";
 
 export default async function getPageData(
   pageId: string,
@@ -10,7 +10,7 @@ export default async function getPageData(
     const data = await loadPageChunk({ pageId, limit });
     const blocks = Object.values(data.recordMap.block);
     if (blocks[0] && blocks[0].value.content) blocks.splice(0, 3);
-    const fullContent = parseBlocks(blocks);
+    const fullContent = await parseBlocks(blocks);
     if (separatePreviewContent) {
       const [previewContent, content] = splitContent(fullContent);
       return { blocks, content, previewContent };
@@ -37,16 +37,32 @@ export type NotionContentItem = [
 
 export type NotionPageContent = NotionContentItem[];
 
-export function parseBlocks(blocks: NotionBlock[]): NotionPageContent {
+const getTweetId = (source: string) => source.split("/")[5].split("?")[0];
+export async function parseBlocks(
+  blocks: NotionBlock[]
+): Promise<NotionPageContent> {
   const content: NotionPageContent = [];
+  let index = 0;
   for (const block of blocks) {
     const { value } = block;
     const { type, properties, format = {}, id, file_ids } = value;
+    if (index === 0 && type === "page") continue;
+    if (type === "divider") content.push(["divider", [[""]], { id }]);
     if (properties) {
-      const { title } = properties;
+      const { title = [[""]] } = properties;
       if (type === "tweet") {
-        const html = (properties.html as any) as string;
-        content.push([type, title, { html, id }]);
+        const source = (properties.source as TextProp)[0][0];
+        const tweetId = getTweetId(source);
+        if (!tweetId) continue;
+        try {
+          const url = `https://api.twitter.com/1/statuses/oembed.json?id=${tweetId}`;
+          const res = await fetch(url);
+          const json = await res.json();
+          const html = json.html.split("<script")[0];
+          content.push([type, title, { html, id }]);
+        } catch (e) {
+          console.error(`Failed to get tweet embed for ${source}: ${e}`);
+        }
       } else if (type === "code") {
         const language = (properties.language as TextProp)[0][0];
         content.push([type, title, { language, id }]);
@@ -56,6 +72,7 @@ export function parseBlocks(blocks: NotionBlock[]): NotionPageContent {
         content.push([type, title, { id }]);
       }
     }
+    index++;
   }
   return content;
 }
@@ -66,6 +83,5 @@ export function splitContent(content: NotionPageContent) {
   const previewBlocks = content
     .splice(0, dividerIndex)
     .filter(([type]) => !nonPreviewTypes.has(type));
-  const contentBlocks = content.splice(dividerIndex);
-  return [previewBlocks, contentBlocks];
+  return [previewBlocks, content.slice(1)];
 }

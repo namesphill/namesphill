@@ -6,8 +6,8 @@ export default function Tweet({ html }: { html: string }) {
       (window as any).twttr.widgets.load();
     } else if (!document.querySelector(`script[src="${twitterSrc}"]`)) {
       const script = document.createElement("script");
-      script.async = true;
       script.src = twitterSrc;
+      script.async = true;
       document.querySelector("body").appendChild(script);
     }
   }, []);
