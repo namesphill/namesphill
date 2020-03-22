@@ -7,7 +7,7 @@ const localeConfigs = {
   day: "2-digit",
   year: "numeric"
 };
-export const getDateStr = (date: Date = new Date()) =>
+export const getDateStr = (date: Date) =>
   date.toLocaleString("en-US", localeConfigs);
 
 export const postIsPublished = (post: PostRow) => post.Published[1];
