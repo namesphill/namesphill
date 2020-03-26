@@ -4,9 +4,6 @@
 .env
 .env.*
 
-# private variables
-keys.js
-
 # dependencies
 /node_modules
 /.pnp
