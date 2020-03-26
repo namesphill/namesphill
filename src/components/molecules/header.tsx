@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Head from "next/head";
-import ExtLink from "./ext-link";
+import ExtLink from "../atoms/ext-link";
 import { useRouter } from "next/router";
-import styles from "../styles/header.module.css";
+import styles from "./header.module.css";
 
 const navItems: { label: string; page?: string; link?: string }[] = [
   { label: "Home", page: "/" },

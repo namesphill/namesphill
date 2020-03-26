@@ -1,4 +1,4 @@
-import ExtLink from "./ext-link";
+import ExtLink from "../atoms/ext-link";
 
 export default function Footer(): JSX.Element {
   return (

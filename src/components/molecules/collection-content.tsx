@@ -1,6 +1,7 @@
 import React from "react";
 import PreviewAlert from "./preview-alert";
 import Header from "./header";
+import styles from "./collection-content.module.css";
 
 export type CollectionContentProps<T> = {
   title: string;
@@ -21,7 +22,7 @@ export default function CollectionContent<T>(
     emptyMessage = "Oh, such empty",
   } = props;
   const PageHeader = <Header titlePre={title} />;
-  const Empty = <p style={{ textAlign: "center" }}>{emptyMessage}</p>;
+  const Empty = <p className={styles.empty}>{emptyMessage}</p>;
   const PageContent = items.length ? items.map(CollectionItem) : Empty;
   return (
     <div>

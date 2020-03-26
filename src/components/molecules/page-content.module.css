@@ -25,45 +25,45 @@
   text-align: center;
 }
 
-.postPreview {
+.pagePreview {
   max-width: 600px;
   margin: 10px auto;
   border-bottom: 1px solid rgba(0, 0, 0, 0.8);
 }
 
-.postPreview:last-child {
+.pagePreview:last-child {
   border-bottom: none;
 }
 
-.postPreview h3,
-.post h1 {
+.pagePreview h3,
+.page h1 {
   margin-bottom: 0;
 }
 
-.post h1 {
+.page h1 {
   margin-top: 0;
 }
 
-.post :global(h2),
-.post :global(h3) {
+.page :global(h2),
+.page :global(h3) {
   margin: 3rem 0 1.5rem 0;
 }
 
-.post :global(video),
-.post :global(img),
-.post :global(.asset-wrapper) {
+.page :global(video),
+.page :global(img),
+.page :global(.asset-wrapper) {
   margin: 2rem auto;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
   max-width: 100%;
   display: block;
 }
 
-.post :global(.tweet) {
+.page :global(.tweet) {
   margin: 2rem auto;
   text-align: center;
 }
 
-.post :global(.callout) {
+.page :global(.callout) {
   padding: 16px 16px 16px 12px;
   display: flex;
   width: 100%;
@@ -74,24 +74,24 @@
   background: rgba(235, 236, 237, 0.6);
 }
 
-.post :global(.callout .text) {
+.page :global(.callout .text) {
   margin-left: 8px;
 }
 
-.postPreview :global(.posted) {
+.pagePreview :global(.pageed) {
   margin-bottom: 0.5em;
 }
 
-.post {
+.page {
   max-width: calc(600px + 10%);
   margin: 0 auto;
   padding: 5%;
 }
 
-.post :global(hr) {
+.page :global(hr) {
   margin-bottom: 2em;
 }
 
-.post :global(a + p) {
+.page :global(a + p) {
   margin-top: 0;
 }

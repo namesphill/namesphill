@@ -1,13 +1,13 @@
-import Header from "../components/atoms/header";
+import Header from "../components/molecules/header";
 import ExtLink from "../components/atoms/ext-link";
 
 import sharedStyles from "../styles/shared.module.css";
 import contactStyles from "../styles/contact.module.css";
 
-import GitHub from "../components/svgs/github";
-import Twitter from "../components/svgs/twitter";
-import Envelope from "../components/svgs/envelope";
-import LinkedIn from "../components/svgs/linkedin";
+import GitHub from "../components/atoms/svgs/github";
+import Twitter from "../components/atoms/svgs/twitter";
+import Envelope from "../components/atoms/svgs/envelope";
+import LinkedIn from "../components/atoms/svgs/linkedin";
 
 const contacts = [
   {

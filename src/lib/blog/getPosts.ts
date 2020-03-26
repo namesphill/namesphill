@@ -3,6 +3,7 @@ import getCollectionData, {
   CollectionPropertyMap,
   CollectionRow,
   GetCollectionDataConfigs,
+  CollectionProperty,
 } from "../notion/getCollectionData";
 import { BLOG_INDEX_ID } from "../server/server-constants";
 import { loadPageChunk } from "../notion/loadPageChunk";

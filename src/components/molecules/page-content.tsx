@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { NotionPageContent } from "../../lib/notion/getPageData";
-import contentStyles from "./page-content.module.css";
 import Header from "./header";
 import PreviewAlert from "./preview-alert";
-import ContentItem from "./content-item";
+import ContentItem from "../atoms/content-item";
+import styles from "./page-content.module.css";
 
 export type PageContentProps = {
   content?: NotionPageContent;
@@ -36,7 +36,7 @@ export default function PageContent({
   const Empty = <p>This page has no content</p>;
   const PageContent = content.length ? content.map(ContentItem) : Empty;
   return (
-    <div className={contentStyles.post}>
+    <div className={styles.page}>
       {previewConfigs && previewConfigs.active && (
         <PreviewAlert
           previewKey={previewConfigs.key}

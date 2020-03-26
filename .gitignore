@@ -2,6 +2,7 @@
 
 # environmental variables
 .env
+.env.*
 
 # private variables
 keys.js

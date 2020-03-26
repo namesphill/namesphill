@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Header from "../components/atoms/header";
+import Header from "../components/molecules/header";
 import ExtLink from "../components/atoms/ext-link";
 import Features from "../components/atoms/features";
-import GitHub from "../components/svgs/github";
+import GitHub from "../components/atoms/svgs/github";
 import sharedStyles from "../styles/shared.module.css";
 
 export default () => (

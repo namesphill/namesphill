@@ -3,8 +3,8 @@ import { writeFile } from "./fs-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 import getPosts, { PostRow } from "./blog/getPosts";
 import { postIsPublished, getPostLink } from "./blog/blog-helpers";
-import RichText from "../components/atoms/rich-text";
 import { NotionUser } from "./notion/getUsers";
+import ContentItem from "../components/atoms/content-item";
 
 // must use weird syntax to bypass auto replacing of NODE_ENV
 process.env["NODE" + "_ENV"] = "production";
@@ -29,13 +29,13 @@ function postToEntry(post: PostRow) {
   const {
     Date: [, date = new Date()],
     Name: [, title = ""],
-    Preview: [, preview = []],
+    PreviewContent: [, preview = []],
     Authors: [, authors = []],
     Slug,
     id: key,
   } = post;
   const link = getPostLink(Slug);
-  const previewJSX = preview.map((content) => RichText({ content, key }));
+  const previewJSX = preview.map(ContentItem);
   return `
     <entry>
       <id>${link}</id>

@@ -1,8 +1,6 @@
-export default props => (
+export default (props) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     stroke="currentColor"
     strokeWidth="1.5"
     strokeLinecap="round"
@@ -11,7 +9,9 @@ export default props => (
     shapeRendering="geometricPrecision"
     {...props}
   >
-    <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-    <path d="M22 4L12 14.01l-3-3" />
+    <path d="M5 12.55a11 11 0 0114.08 0" />
+    <path d="M1.42 9a16 16 0 0121.16 0" />
+    <path d="M8.53 16.11a6 6 0 016.95 0" />
+    <path d="M12 20h.01" />
   </svg>
-)
+);
