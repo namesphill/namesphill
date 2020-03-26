@@ -1,5 +1,5 @@
-import Header from "../components/cells/header";
-import ExtLink from "../components/cells/ext-link";
+import Header from "../components/atoms/header";
+import ExtLink from "../components/atoms/ext-link";
 
 import sharedStyles from "../styles/shared.module.css";
 import contactStyles from "../styles/contact.module.css";

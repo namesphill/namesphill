@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Header from "../components/cells/header";
-import ExtLink from "../components/cells/ext-link";
-import Features from "../components/cells/features";
+import Header from "../components/atoms/header";
+import ExtLink from "../components/atoms/ext-link";
+import Features from "../components/atoms/features";
 import GitHub from "../components/svgs/github";
 import sharedStyles from "../styles/shared.module.css";
 

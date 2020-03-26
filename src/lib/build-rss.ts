@@ -3,7 +3,7 @@ import { writeFile } from "./fs-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 import getPosts, { PostRow } from "./blog/getPosts";
 import { postIsPublished, getPostLink } from "./blog/blog-helpers";
-import RichText from "../components/cells/rich-text";
+import RichText from "../components/atoms/rich-text";
 import { NotionUser } from "./notion/getUsers";
 
 // must use weird syntax to bypass auto replacing of NODE_ENV

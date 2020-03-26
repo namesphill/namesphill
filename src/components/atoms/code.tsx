@@ -1,6 +1,6 @@
-import Prism from "./node_modules/prismjs";
-import ReactJSXParser from "./node_modules/@zeit/react-jsx-parser";
-import "./node_modules/prismjs/components/prism-jsx";
+import Prism from "prismjs";
+import ReactJSXParser from "@zeit/react-jsx-parser";
+import "prismjs/components/prism-jsx";
 import dynamicComponents from "./dynamic";
 export type CodeProps = {
   content: TextProp;
