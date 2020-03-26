@@ -8,7 +8,7 @@ export type RedirectProps = {
 export default function Redirect({
   to = "/",
   placeholder = "",
-  timeout = 500
+  timeout = 500,
 }: RedirectProps): JSX.Element {
   const { replace } = useRouter();
   useEffect(() => {

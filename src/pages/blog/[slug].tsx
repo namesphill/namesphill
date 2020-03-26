@@ -1,4 +1,6 @@
-import PageContent, { PageContentProps } from "../../components/page-content";
+import PageContent, {
+  PageContentProps,
+} from "../../components/cells/page-content";
 import { GetStaticProps, GetStaticPaths } from "next";
 import getPosts from "../../lib/blog/getPosts";
 import {
@@ -7,7 +9,7 @@ import {
   getDateString,
 } from "../../lib/blog/blog-helpers";
 import { NotionUser } from "../../lib/notion/getUsers";
-import UserCard from "../../components/user";
+import UserCard from "../../components/cells/user";
 
 export const getStaticProps: GetStaticProps = async ({ params, preview }) => {
   const slug = params.slug as string;

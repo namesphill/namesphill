@@ -1,7 +1,7 @@
 import React from "react";
-import { NotionUser } from "../lib/notion/getUsers";
+import { NotionUser } from "../../lib/notion/getUsers";
 import ExtLink from "./ext-link";
-import { USER_ID } from "../keys";
+import { USER_ID } from "../../keys";
 export default function UserCard(
   props: NotionUser & { caption: string; inline?: boolean }
 ) {

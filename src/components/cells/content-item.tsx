@@ -1,5 +1,5 @@
 import React from "react";
-import { NotionContentItem } from "../lib/notion/getPageData";
+import { NotionContentItem } from "../../lib/notion/getPageData";
 import RichText from "./rich-text";
 import Media from "./media";
 import Code from "./code";

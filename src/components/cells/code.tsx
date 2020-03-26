@@ -8,7 +8,7 @@ export type CodeProps = {
 };
 export default function Code({
   content,
-  language = "javascript"
+  language = "javascript",
 }: CodeProps): JSX.Element {
   const [[text]] = content;
   if (language === "LiveScript") {
@@ -32,7 +32,7 @@ export default function Code({
               text,
               Prism.languages[language.toLowerCase()] ||
                 Prism.languages.javascript
-            )
+            ),
           }}
         />
       </pre>

@@ -1,7 +1,7 @@
 import React from "react";
 import getPosts, { PostRow } from "../../lib/blog/getPosts";
 import { GetStaticProps } from "next";
-import CollectionContent from "../../components/collection-content";
+import CollectionContent from "../../components/cells/collection-content";
 import Link from "next/link";
 import { getPostLink } from "../../lib/blog/blog-helpers";
 

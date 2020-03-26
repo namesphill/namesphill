@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { NotionPageContent } from "../lib/notion/getPageData";
+import { NotionPageContent } from "../../lib/notion/getPageData";
 import contentStyles from "./page-content.module.css";
 import Header from "./header";
 import PreviewAlert from "./preview-alert";

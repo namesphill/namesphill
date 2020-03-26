@@ -7,6 +7,6 @@ const dynamicComponents = {
   p: "p",
   blockquote: "blockquote",
   a: ExtLink,
-  Code: dynamic(() => import("./code"))
+  Code: dynamic(() => import("./code")),
 };
 export default dynamicComponents;

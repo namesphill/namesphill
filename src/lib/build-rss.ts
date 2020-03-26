@@ -3,7 +3,7 @@ import { writeFile } from "./fs-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 import getPosts, { PostRow } from "./blog/getPosts";
 import { postIsPublished, getPostLink } from "./blog/blog-helpers";
-import RichText from "../components/rich-text";
+import RichText from "../components/cells/rich-text";
 import { NotionUser } from "./notion/getUsers";
 
 // must use weird syntax to bypass auto replacing of NODE_ENV
@@ -32,10 +32,10 @@ function postToEntry(post: PostRow) {
     Preview: [, preview = []],
     Authors: [, authors = []],
     Slug,
-    id: key
+    id: key,
   } = post;
   const link = getPostLink(Slug);
-  const previewJSX = preview.map(content => RichText({ content, key }));
+  const previewJSX = preview.map((content) => RichText({ content, key }));
   return `
     <entry>
       <id>${link}</id>
@@ -76,4 +76,4 @@ async function main() {
   console.info(`Atom feed file generated at \`${outputPath}\``);
 }
 
-main().catch(error => console.error(error));
+main().catch((error) => console.error(error));

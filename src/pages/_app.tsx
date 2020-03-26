@@ -1,5 +1,5 @@
 import "./global.css";
-import ExtLink from "../components/ext-link";
+import ExtLink from "../components/cells/ext-link";
 
 export default ({ Component, pageProps }) => (
   <>

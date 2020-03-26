@@ -1,15 +1,15 @@
 const collectText = (el, acc = []) => {
   if (el) {
     if (typeof el === "string") acc.push(el);
-    if (Array.isArray(el)) el.map(item => collectText(item, acc));
+    if (Array.isArray(el)) el.map((item) => collectText(item, acc));
     if (typeof el === "object") collectText(el.props && el.props.children, acc);
   }
   return acc.join("").trim();
 };
 
-export default function({
+export default function ({
   children: component,
-  id
+  id,
 }: {
   children: JSX.Element;
   id?: any;

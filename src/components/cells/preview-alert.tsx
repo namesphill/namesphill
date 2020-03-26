@@ -3,7 +3,7 @@ import previewStyles from "./preview-alert.module.css";
 import Link from "next/link";
 export default function PreviewAlert({
   previewKey = "",
-  previewValue = ""
+  previewValue = "",
 }): JSX.Element {
   const previewQuery =
     previewKey && previewValue && `?${previewKey}=${previewValue}`;
