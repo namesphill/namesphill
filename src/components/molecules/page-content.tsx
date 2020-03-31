@@ -4,7 +4,7 @@ import { NotionPageContent } from "../../lib/notion/getPageData";
 import Header from "./header";
 import PreviewAlert from "./preview-alert";
 import ContentItem from "../atoms/content-item";
-import styles from "./page-content.module.css";
+import styles from "./page-content.module.scss";
 
 export type PageContentProps = {
   content?: NotionPageContent;
@@ -28,7 +28,7 @@ export default function PageContent({
   if (router.isFallback) return <div>Loading...</div>;
   const PageHeader = (
     <>
-      <Header titlePre={name} />
+      <Header pageTitle={name} />
       <h1>{name}</h1>
       {heading}
     </>

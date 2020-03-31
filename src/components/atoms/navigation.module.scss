@@ -1,0 +1,31 @@
+.container {
+  display: block;
+  min-height: 64px;
+  padding: 10px 50px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  a {
+    color: var(--white);
+    font-family: var(--font-serif);
+    text-transform: uppercase;
+    font-size: small;
+    &.active {
+      text-decoration: underline;
+    }
+  }
+  ul {
+    margin-right: 0px;
+    list-style: none;
+    padding: 0;
+  }
+  ul li {
+    display: inline-block;
+    padding: 0 10px;
+  }
+  @media (max-width: 600px) {
+    padding: 0.5em 0 2em;
+  }
+}

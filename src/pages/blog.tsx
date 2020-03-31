@@ -1,9 +1,9 @@
 import React from "react";
-import getPosts, { PostRow } from "../../lib/blog/getPosts";
+import getPosts, { PostRow } from "../lib/blog/getPosts";
 import { GetStaticProps } from "next";
-import CollectionContent from "../../components/molecules/collection-content";
+import CollectionContent from "../components/molecules/collection-content";
 import Link from "next/link";
-import { getPostLink } from "../../lib/blog/blog-helpers";
+import { getPostLink } from "../lib/blog/blog-helpers";
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   let posts = await getPosts({

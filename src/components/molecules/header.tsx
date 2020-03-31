@@ -1,50 +1,41 @@
 import Link from "next/link";
 import Head from "next/head";
-import ExtLink from "../atoms/ext-link";
-import { useRouter } from "next/router";
-import styles from "./header.module.css";
+import styles from "./header.module.scss";
+import Navigation from "../atoms/navigation";
 
-const navItems: { label: string; page?: string; link?: string }[] = [
-  { label: "Home", page: "/" },
-  { label: "Blog", page: "/blog" },
-  { label: "Contact", page: "/contact" },
-  { label: "Source Code", link: "https://github.com/ijjk/notion-blog" },
+const navItems = [
+  { label: "Blog", link: "/blog" },
+  { label: "Contact", link: "/contact" },
+  { label: "Twitter", link: "https://twitter.com/namesphill" },
 ];
 
 const ogImageUrl = "https://notion-blog.now.sh/og-image.png";
 
-export default function Header({ titlePre = "" }): JSX.Element {
-  const { pathname } = useRouter();
-
+export default function Header({ pageTitle = "" }): JSX.Element {
   return (
-    <header className={styles.header}>
+    <>
       <Head>
-        <title>{titlePre ? `${titlePre} |` : ""} My Notion Blog</title>
+        <title>Felipe Acosta{pageTitle && " - " + pageTitle}</title>
         <meta
           name="description"
           content="An example Next.js site using Notion for the blog"
         />
-        <meta name="og:title" content="My Notion Blog" />
+        <meta name="og:title" content="Felipe Acosta" />
         <meta property="og:image" content={ogImageUrl} />
-        <meta name="twitter:site" content="@_ijjk" />
+        <meta name="twitter:site" content="@namesphill" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ogImageUrl} />
       </Head>
-      <ul>
-        {navItems.map(({ label, page, link }) => (
-          <li key={label}>
-            {page ? (
-              <Link href={page}>
-                <a className={pathname === page ? "active" : undefined}>
-                  {label}
-                </a>
-              </Link>
-            ) : (
-              <ExtLink href={link}>{label}</ExtLink>
-            )}
-          </li>
-        ))}
-      </ul>
-    </header>
+      <header className={styles.header}>
+        <Navigation
+          items={navItems}
+          leadingItem={
+            <Link href="/">
+              <img src="/felipe.png" alt="'Felipe' website logo" height="90" />
+            </Link>
+          }
+        />
+      </header>
+    </>
   );
 }

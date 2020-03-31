@@ -1,5 +1,5 @@
 import React from "react";
-import previewStyles from "./preview-alert.module.css";
+import previewStyles from "./preview-alert.module.scss";
 import Link from "next/link";
 export default function PreviewAlert({
   previewKey = "",

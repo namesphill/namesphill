@@ -75,6 +75,9 @@ export default function Media({
   }
 
   return useWrapper ? (
+    /**
+     * Only works inside <PageContent />
+     */
     <div
       style={{
         paddingTop: `${Math.round(block_aspect_ratio * 100)}%`,

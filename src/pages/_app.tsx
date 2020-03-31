@@ -1,26 +1,12 @@
-import "./global.css";
-import ExtLink from "../components/atoms/ext-link";
+import "../styles/global.scss";
+import Footer from "../components/molecules/footer";
+import { AppType } from "next/dist/next-server/lib/utils";
 
-export default ({ Component, pageProps }) => (
+const App: AppType = ({ Component, pageProps }) => (
   <>
     <Component {...pageProps} />
-
-    <footer>
-      <span>Deploy your own!</span>
-      <ExtLink href="https://zeit.co/new/project?template=https://github.com/ijjk/notion-blog/tree/master">
-        <img
-          src="https://zeit.co/button"
-          height={46}
-          width={132}
-          alt="deploy to ZEIT button"
-        />
-      </ExtLink>
-      <span>
-        or{" "}
-        <ExtLink href="https://github.com/ijjk/notion-blog">
-          view source
-        </ExtLink>
-      </span>
-    </footer>
+    <Footer />
   </>
 );
+
+export default App;

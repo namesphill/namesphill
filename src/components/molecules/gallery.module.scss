@@ -1,0 +1,40 @@
+.container {
+  .link {
+    &:hover {
+      opacity: 0.8;
+    }
+    &:active {
+      opacity: 0.7;
+    }
+  }
+  .items {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-column-gap: 16px;
+    grid-row-gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    .item {
+      position: relative;
+      z-index: 100;
+      padding-right: 0px;
+      padding-left: 0px;
+    }
+    .content {
+      background-size: cover;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+    .footer {
+      display: flex;
+      width: 100%;
+      margin-bottom: 60px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

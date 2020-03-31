@@ -1,13 +1,16 @@
-import ExtLink from "../atoms/ext-link";
+import Navigation from "../atoms/navigation";
+
+const navItems = [
+  { label: "Github", link: "https://github.com/namesphill" },
+  { label: "Twitter", link: "https://twitter.com/namesphill" },
+  { label: "Instagram", link: "https://instagram.com/namesphill" },
+  { label: "Medium", link: "https://medium.com/namesphill" },
+];
 
 export default function Footer(): JSX.Element {
   return (
-    <>
-      <footer>
-        <ExtLink href="https://github.com/ijjk/notion-blog">
-          Source code
-        </ExtLink>
-      </footer>
-    </>
+    <footer>
+      <Navigation items={navItems} leadingItem={<div />} />
+    </footer>
   );
 }
